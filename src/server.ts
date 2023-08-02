@@ -26,6 +26,15 @@ app.get("/eat/carrot", (req, res) => {
   });
 });
 
+app.get<{ word: string }>("/eat/:word", (req, res) => {
+  const foodWord = req.params.word.toLowerCase();
+  const vowels = ["a","e","i","o","u"];
+  const firstLetter = foodWord[0];
+  res.json({
+    message: `Yum yum - you ate ${vowels.includes(firstLetter)? "an" : "a"} ${foodWord}!`,
+  });
+});
+
 app.get<{ exampleRouteParameter: string }>(
   "/echo/:exampleRouteParameter",
   (req, res) => {
@@ -84,6 +93,24 @@ app.get<{ word: string }>("/shout/:word", (req, res) => {
     result: `I am shouting back to you: ${shoutWord}`,
   });
 });
+
+app.get<{ numOne: string; numTwo: string ; numThree:string }>(
+  "/add/:numOne/:numTwo/:numThree?",
+  (req, res) => {
+  
+    const { numOne, numTwo, numThree } = req.params;
+
+    const stringNumArray = [numOne,numTwo,numThree || "0"]
+    const numArray = stringNumArray.map((val)=> parseInt(val))
+    const addition = numArray.reduce((prevValue,currentValue) => prevValue + currentValue,0)
+    res.json({
+      original: `${numOne} + ${numTwo} ${numThree? `+ ${numThree}`: ""}`,
+      result: addition,
+    });
+  }
+);
+
+
 
 // using 4000 by convention, but could be changed
 const PORT_NUMBER = 4000;
