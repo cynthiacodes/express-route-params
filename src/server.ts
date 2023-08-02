@@ -26,29 +26,35 @@ app.get("/eat/carrot", (req, res) => {
   });
 });
 
-app.get("/echo/:exampleRouteParameter", (req, res) => {
-  const echoContent = req.params.exampleRouteParameter;
-  res.json({
-    echo: echoContent,
-    message: `I am echoing back to you: ${echoContent}`,
-  });
-});
+app.get<{ exampleRouteParameter: string }>(
+  "/echo/:exampleRouteParameter",
+  (req, res) => {
+    const echoContent = req.params.exampleRouteParameter;
+    res.json({
+      echo: echoContent,
+      message: `I am echoing back to you: ${echoContent}`,
+    });
+  }
+);
 
-app.get("/multiply/:numOne/:numTwo", (req, res) => {
-  /**
-   * Note that `numOne` and `numTwo` are both typed as string.
-   * (Hover over with your mouse to see!)
-   *
-   * Route params are, by default, typed as strings when they
-   * are parsed by Express.
-   */
-  const { numOne, numTwo } = req.params;
-  const multiplication = parseInt(numOne) * parseInt(numTwo);
-  res.json({
-    original: `${numOne} x ${numTwo}`,
-    result: multiplication,
-  });
-});
+app.get<{ numOne: string; numTwo: string }>(
+  "/multiply/:numOne/:numTwo",
+  (req, res) => {
+    /**
+     * Note that `numOne` and `numTwo` are both typed as string.
+     * (Hover over with your mouse to see!)
+     *
+     * Route params are, by default, typed as strings when they
+     * are parsed by Express.
+     */
+    const { numOne, numTwo } = req.params;
+    const multiplication = parseInt(numOne) * parseInt(numTwo);
+    res.json({
+      original: `${numOne} x ${numTwo}`,
+      result: multiplication,
+    });
+  }
+);
 
 /**
  * `app.get` can take a type argument.
@@ -68,6 +74,14 @@ app.get<{ name: string }>("/happy-birthday/:name", (req, res) => {
       `Happy birthday dear ${req.params.name}`,
       "Happy birthday to you!",
     ],
+  });
+});
+
+app.get<{ word: string }>("/shout/:word", (req, res) => {
+  const shoutWord = `${req.params.word.toUpperCase()}!`;
+  res.json({
+    shout: shoutWord,
+    result: `I am shouting back to you: ${shoutWord}`,
   });
 });
 
